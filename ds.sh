@@ -51,6 +51,12 @@ print_field() {
 	done
 }
 
+move_input(){
+    echo "Podaj wiersz: "
+    read POS_Y
+    echo "Podaj kolumne: "
+    read POS_X
+}
 field_creator
 
 while [ $ONGOING -ne 0 ]; do
@@ -68,10 +74,7 @@ while [ $ONGOING -ne 0 ]; do
 	if [ $MOVE_TYPE -eq 3 ]; then
 		ONGOING=0
 	elif [ $MOVE_TYPE -eq 1 ]; then
-	        echo "Podaj wiersz: "
-		read POS_Y
-               	echo "Podaj kolumne: "
-	        read POS_X
+	        move_input
 		if [ "${FIELD[$POS_Y*$SIZE+$POS_X]}" -eq 2 ]; then
 			echo "BOOM"
 			ONGOING=0	 
@@ -83,7 +86,7 @@ while [ $ONGOING -ne 0 ]; do
 			fi
 		fi
 	elif [ $MOVE_TYPE -eq 2 ]; then
-		echo "aaaaa"
+	    move_input
 	else
 		echo "Nieprawidlowy ruch!"
 	fi
