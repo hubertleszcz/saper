@@ -35,7 +35,7 @@ function field_creator {
 
 	for (( i=0; i<BOMBS; i++ ))
 	do
-		bomb_location=$(shuf -i 0-400 -n 1)
+		bomb_location=$(shuf -i 0-100 -n 1)
 		FIELD[$bomb_location]=2
 	done
 }
@@ -58,6 +58,24 @@ move_input(){
     echo "Podaj kolumne: "
     read POS_X
 }
+
+find_adjacent_bombs(){
+	COUNT_BOMBS=0
+	if [ $POS_X -ne 0 ]; then
+		TMPX=$POS_X-1
+		if [ "${FIELD[$POS_Y*$SIZE+$TMPX]}" -eq 1 ]; then
+			((COUNT_BOMBS+=1))
+		fi
+	fi
+	if [ $POS_X -ne 9 ]; then
+		TMPX=$POS_X+1
+		if [ "${FIELD[$POS_Y*$SIZE+$TMPX]}" -eq 1 ]; then
+			((COUNT_BOMBS+=1))
+		fi
+	fi
+	FIELD_WITH_FOG[$POS_Y*$SIZE+$POS_X]="$COUNT_BOMBS "
+}
+
 field_creator
 
 while [ $ONGOING -ne 0 ]; do
@@ -85,6 +103,7 @@ while [ $ONGOING -ne 0 ]; do
 			else	
 				((PLAYER2_POINTS+=1))
 			fi
+			find_adjacent_bombs
 		fi
 	elif [ $MOVE_TYPE -eq 2 ]; then
 	    move_input
