@@ -1,8 +1,8 @@
 # Author           : HUbert Leszczynski ( 193552 )
 # Created On       : 25.04.2023
 # Last Modified By : Hubert Leszczynski
-# Last Modified On : 9.05.2023
-# Version          : alpha 0.0.1
+# Last Modified On : 16.05.2023
+# Version          : alpha 0.0.2
 #
 # Description      :Gra w sapera na dwie osoby
 # Opis
@@ -40,6 +40,7 @@ function field_creator {
 	done
 }
 print_field() {
+	INDEX=0
 	for (( i=0; i<SIZE; i++ ))
 	do
 		for (( j=0; j<SIZE; j++ ))
@@ -67,10 +68,10 @@ while [ $ONGOING -ne 0 ]; do
 	fi
 
 	print_field
-
+	
 	echo "Podaj typ ruchu: 1 to sprawdzenie, 2 to rozbrojenie, a 3 to zakonczenie rozgrywki:  "
 	read MOVE_TYPE
-
+	
 	if [ $MOVE_TYPE -eq 3 ]; then
 		ONGOING=0
 	elif [ $MOVE_TYPE -eq 1 ]; then
@@ -87,6 +88,22 @@ while [ $ONGOING -ne 0 ]; do
 		fi
 	elif [ $MOVE_TYPE -eq 2 ]; then
 	    move_input
+	    if [ "${FIELD[$POS_Y*$SIZE+$POS_X]}" -eq 2 ]; then
+		echo "Bomba rozbrojona!. 2 punkty!"
+		if [ $CURRENT_PLAYER -eq 1]; then
+			((PLAYER1_POINTS+=2))
+		else
+			((PLAYER2_POINTS+=2))
+		fi
+	    else
+		echo "Puste pole! Tracisz 1 punkt"
+		if [ $CURRENT_PLAYER -eq 1 ]; then
+			((PLAYER1_POINTS-=1))
+		else
+			((PLAYER2_POINTS-=1))
+		fi
+	  FIELD[$POS_Y*$SIZE+$POS_X]=3
+	  fi
 	else
 		echo "Nieprawidlowy ruch!"
 	fi
