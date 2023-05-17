@@ -16,7 +16,7 @@ PLAYER1_POINTS=0
 PLAYER2_POINTS=0
 CURRENT_PLAYER=1
 SIZE=10
-BOMBS=30
+BOMBS=10
 FIELD=()
 FIELD_WITH_FOG=()
 INDEX=0
@@ -61,15 +61,52 @@ move_input(){
 
 find_adjacent_bombs(){
 	COUNT_BOMBS=0
+	HELPER=$SIZE-1
 	if [ $POS_X -ne 0 ]; then
 		TMPX=$POS_X-1
-		if [ "${FIELD[$POS_Y*$SIZE+$TMPX]}" -eq 1 ]; then
+		if [ "${FIELD[$POS_Y*$SIZE+$TMPX]}" -eq 2 ]; then
+			((COUNT_BOMBS+=1))
+		fi
+		if [ $POS_Y -ne 0 ]; then
+			TMPY=$POS_Y-1
+			if [ "${FIELD[$TMPY*$SIZE+$TMPX]}" -eq 2 ]; then
+				((COUNT_BOMBS+=1))
+			fi
+		fi
+		if [ $POS_Y -ne $HELPER ]; then
+			TMPY=$POS_Y+1
+			if [ "${FIELD[$TMPY*$SIZE+$TMPX]}" -eq 2 ]; then
+				((COUNT_BOMBS+=1))
+			fi
+		fi
+	fi
+	if [ $POS_X -ne $HELPER ]; then
+		TMPX=$POS_X+1
+		if [ "${FIELD[$POS_Y*$SIZE+$TMPX]}" -eq 2 ]; then
+			((COUNT_BOMBS+=1))
+		fi
+		if [ $POS_Y -ne 0 ]; then
+			TMPY=$POS_Y-1
+			if [ "${FIELD[$TMPY*$SIZE+$TMPX]}" -eq 2 ]; then
+				((COUNT_BOMBS+=1))
+			fi
+		fi
+		if [ $POS_Y -ne $HELPER ]; then
+			TMPY=$POS_Y+1
+			if [ "${FIELD[$TMPY*$SIZE+$TMPX]}" -eq 2 ]; then
+				((COUNT_BOMBS+=1))
+			fi
+		fi
+	fi
+	if [ $POS_Y -ne 0 ]; then
+		TMPY=$POS_Y-1
+		if [ "${FIELD[$TMPY*$SIZE+$POS_X]}" -eq 2 ]; then
 			((COUNT_BOMBS+=1))
 		fi
 	fi
-	if [ $POS_X -ne 9 ]; then
-		TMPX=$POS_X+1
-		if [ "${FIELD[$POS_Y*$SIZE+$TMPX]}" -eq 1 ]; then
+	if [ $POS_Y -ne $HELPER ]; then
+		TMPY=$POS_Y+1
+		if [ "${FIELD[$TMPY*$SIZE+$POS_X]}" -eq 2 ]; then
 			((COUNT_BOMBS+=1))
 		fi
 	fi
